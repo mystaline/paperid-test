@@ -19,14 +19,14 @@ type DisbursementParam struct {
 }
 
 type DisbursementService struct {
-	txManager                *repository.TransactionManager
+	txManager                repository.TransactionManager
 	TransactionLogRepository repository.TransactionLogRepositor
 	UserRepository           repository.UserRepositor
 	WalletRepository         repository.WalletRepositor
 }
 
 func NewDisbursementService(
-	txManager *repository.TransactionManager,
+	txManager repository.TransactionManager,
 	transactionLogRepository repository.TransactionLogRepositor,
 	userRepository repository.UserRepositor,
 	walletRepository repository.WalletRepositor,
