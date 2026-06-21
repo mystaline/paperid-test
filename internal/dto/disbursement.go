@@ -6,7 +6,7 @@ type DisbursementRequest struct {
 }
 
 type DisbursementResponse struct {
-	ID     string `json:"id"`
-	Amount int64  `json:"amount"`
-	UserID string `json:"userId"`
+	ID               string `json:"id"`
+	RemainingBalance int64  `json:"remainingBalance"`
+	UserID           string `json:"userId"`
 }
