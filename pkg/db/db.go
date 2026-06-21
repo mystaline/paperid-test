@@ -25,12 +25,20 @@ func NewPool(appConfig config.AppConfig) (*pgxpool.Pool, error) {
 
 	cfg, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
-		log.Fatalf("Invalid PostgreSQL config: %v", err)
+		return nil, fmt.Errorf("parse db config: %w", err)
 	}
 
-	ctx, cancel := context.WithCancel(context.Background())
-	cancel()
-	return pgxpool.NewWithConfig(ctx, cfg)
+	pool, err := pgxpool.NewWithConfig(context.Background(), cfg)
+	if err != nil {
+		return nil, fmt.Errorf("create pool: %w", err)
+	}
+
+	if err := pool.Ping(context.Background()); err != nil {
+		pool.Close()
+		return nil, fmt.Errorf("ping db: %w", err)
+	}
+
+	return pool, nil
 }
 
 var (
