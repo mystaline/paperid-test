@@ -42,8 +42,8 @@ func (r *WalletRepository) DebitBalanceWithReturn(
 	id int64,
 	decrement int64,
 ) (*entity.Wallet, error) {
-	rawQuery := `UPDATE wallets SET balance = balance - $1, updated_at = NOW() WHERE id = $2 RETURNING id, user_id, balance`
-	rows := db.QueryRow(ctx, rawQuery, decrement, id)
+	rawQuery := `UPDATE wallets SET balance = balance - $1, updated_at = NOW() WHERE balance >= $3 AND id = $2 RETURNING id, user_id, balance`
+	rows := db.QueryRow(ctx, rawQuery, decrement, decrement, id)
 
 	wallet := entity.Wallet{}
 	err := rows.Scan(&wallet.ID, &wallet.UserID, &wallet.Balance)
