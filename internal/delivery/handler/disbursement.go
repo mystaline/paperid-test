@@ -33,19 +33,22 @@ func (h *DisbursementHandler) HandleDisbursement(c fiber.Ctx) (err error) {
 		return err
 	}
 
+	if body.Amount <= 0 {
+		return helper.ReplyError(c, helper.ErrBadRequest("Invalid amount request"))
+	}
+
 	userId, err := strconv.ParseInt(body.UserID, 10, 64)
 	if err != nil {
 		return helper.ReplyError(c, helper.ErrBadRequest("Invalid user id"))
 	}
 
 	param := service.DisbursementParam{
-		Ctx:    ctx,
 		Amount: body.Amount,
 		UserID: userId,
 	}
 
 	res := &dto.DisbursementResponse{}
-	res, err = h.DisbursementService.Invoke(param)
+	res, err = h.DisbursementService.Invoke(ctx, param)
 	if err != nil {
 		return helper.ReplyError(c, err)
 	}
