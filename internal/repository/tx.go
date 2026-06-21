@@ -16,7 +16,6 @@ type DBTX interface {
 
 type TransactionManager interface {
 	WithinTx(ctx context.Context, fn func(tx pgx.Tx) error) error
-	DB() *pgxpool.Pool
 }
 
 type pgxTransaction struct {
@@ -42,8 +41,4 @@ func (at *pgxTransaction) WithinTx(ctx context.Context, fn func(tx pgx.Tx) error
 	}
 
 	return tx.Commit(ctx)
-}
-
-func (at *pgxTransaction) DB() *pgxpool.Pool {
-	return at.pool
 }
