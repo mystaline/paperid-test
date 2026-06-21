@@ -3,6 +3,7 @@ module github.com/mystaline/paperid-test
 go 1.26.4
 
 require (
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/gofiber/fiber/v3 v3.3.0
 	github.com/jackc/pgx/v5 v5.10.0
 )
