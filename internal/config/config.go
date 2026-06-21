@@ -25,7 +25,7 @@ func LoadConfig() AppConfig {
 	appConfig.DBPort = cmp.Or(os.Getenv("POSTGRES_PORT"), "5432")
 	appConfig.DBUser = cmp.Or(os.Getenv("POSTGRES_USER"), "postgres")
 	appConfig.DBPassword = cmp.Or(os.Getenv("POSTGRES_PASSWORD"), "postgres")
-	appConfig.DBName = cmp.Or(os.Getenv("POSTGRES_DATABASE"), "paperid_test")
+	appConfig.DBName = cmp.Or(os.Getenv("POSTGRES_DB"), "paperid_test")
 	appConfig.DBSSLMode = cmp.Or(os.Getenv("POSTGRES_SSLMODE"), "disable")
 
 	return appConfig
