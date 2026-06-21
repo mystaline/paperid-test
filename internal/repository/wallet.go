@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/mystaline/paperid-test/internal/entity"
 )
 
@@ -16,7 +15,7 @@ type WalletRepositor interface {
 	UpdateOneByID(ctx context.Context, db DBTX, id int64, values entity.Wallet) (*entity.Wallet, error)
 }
 
-func NewWalletRepository(pool *pgxpool.Pool) WalletRepositor {
+func NewWalletRepository() WalletRepositor {
 	return &WalletRepository{}
 }
 

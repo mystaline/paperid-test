@@ -35,7 +35,7 @@ func New(appConfig config.AppConfig) *App {
 
 	transactionManager := repository.NewTransactionManager(pool)
 
-	walletRepository := repository.NewWalletRepository(pool)
+	walletRepository := repository.NewWalletRepository()
 	disbursementService := service.NewDisbursementService(transactionManager, walletRepository)
 
 	setupRoutes(app, disbursementService)
