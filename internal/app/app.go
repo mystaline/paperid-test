@@ -24,6 +24,8 @@ type App struct {
 }
 
 func New(appConfig config.AppConfig) *App {
+	db.InitIDGenerator()
+
 	pool, err := db.NewPool(appConfig)
 	if err != nil {
 		log.Fatalf("Failed to instantiate database pool connection: %v", err)
@@ -35,8 +37,15 @@ func New(appConfig config.AppConfig) *App {
 
 	transactionManager := repository.NewTransactionManager(pool)
 
+	transactionLogRepository := repository.NewTransactionLogRepository()
+	userRepository := repository.NewUserRepository()
 	walletRepository := repository.NewWalletRepository()
-	disbursementService := service.NewDisbursementService(transactionManager, walletRepository)
+	disbursementService := service.NewDisbursementService(
+		transactionManager,
+		transactionLogRepository,
+		userRepository,
+		walletRepository,
+	)
 
 	setupRoutes(app, disbursementService)
 

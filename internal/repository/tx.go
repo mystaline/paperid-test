@@ -38,3 +38,7 @@ func (at *TransactionManager) WithinTx(ctx context.Context, fn func(tx pgx.Tx) e
 
 	return tx.Commit(ctx)
 }
+
+func (at *TransactionManager) DB() *pgxpool.Pool {
+	return at.pool
+}
