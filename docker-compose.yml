@@ -1,0 +1,48 @@
+services:
+  paperid-postgres:
+    image: postgres:18-alpine
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-paperid_test}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+    ports:
+      - 55432:${POSTGRES_PORT:-5432} # reason port 55432: to avoid collision with existing active postgres
+    volumes:
+      - ./pkg/db/init:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-U",
+          "${POSTGRES_USER:-postgres}",
+          "-d",
+          "${POSTGRES_DB:-paperid_test}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  paperid-test:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - PORT=8080
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-paperid_test}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+    depends_on:
+      paperid-postgres:
+        condition: service_healthy
+    restart: unless-stopped
