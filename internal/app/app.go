@@ -8,8 +8,12 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/gofiber/fiber/v3/middleware/recover"
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/mystaline/paperid-test/internal/config"
+	"github.com/mystaline/paperid-test/internal/delivery/routes"
+	"github.com/mystaline/paperid-test/internal/repository"
+	"github.com/mystaline/paperid-test/internal/service"
 )
 
 type App struct {
@@ -21,13 +25,16 @@ func New(appConfig config.AppConfig) *App {
 	app.Use(recover.New())
 	app.Use(logger.New())
 
-	setupRoutes(app)
+	walletRepository := repository.NewWalletRepository(&pgxpool.Pool{})
+	disbursementService := service.NewDisbursementService(walletRepository)
+
+	setupRoutes(app, disbursementService)
 
 	return &App{app: app}
 }
 
-func setupRoutes(app *fiber.App) {
-	// routes.SetupRoutes(app, )
+func setupRoutes(app *fiber.App, disbursementService *service.DisbursementService) {
+	routes.SetupRoutes(app, disbursementService)
 }
 
 func (a *App) Shutdown() error {
