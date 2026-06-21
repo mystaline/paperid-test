@@ -24,6 +24,14 @@ func ErrInternal(message string) *Error {
 	}
 }
 
+// ErrInternal creates a 422 Internal Server Error.
+func ErrUnprocessableEntity(message string) *Error {
+	return &Error{
+		Code:    fiber.StatusUnprocessableEntity,
+		Message: message,
+	}
+}
+
 // ErrBadRequest creates a 400 Bad Request error.
 func ErrBadRequest(message string) *Error {
 	return &Error{
