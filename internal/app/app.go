@@ -33,8 +33,10 @@ func New(appConfig config.AppConfig) *App {
 	app.Use(recover.New())
 	app.Use(logger.New())
 
+	transactionManager := repository.NewTransactionManager(pool)
+
 	walletRepository := repository.NewWalletRepository(pool)
-	disbursementService := service.NewDisbursementService(walletRepository)
+	disbursementService := service.NewDisbursementService(transactionManager, walletRepository)
 
 	setupRoutes(app, disbursementService)
 
