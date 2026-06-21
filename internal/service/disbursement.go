@@ -65,6 +65,9 @@ func (s *DisbursementService) Invoke(ctx context.Context, param DisbursementPara
 
 		updatedWallet, err := s.WalletRepository.DebitBalanceWithReturn(ctx, tx, wallet.ID, param.Amount)
 		if err != nil {
+			if errors.Is(err, pgx.ErrNoRows) {
+				return helper.ErrUnprocessableEntity("Insufficient balance")
+			}
 			return err
 		}
 
